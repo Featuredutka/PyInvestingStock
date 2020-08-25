@@ -17,11 +17,8 @@ writer.book = book
 writer.sheets = dict((ws.title, ws) for ws in book.worksheets)
 
 i = 0  # Loop iterator
-<<<<<<< HEAD
 progress = 0
-=======
 
->>>>>>> master
 for stock in data:  # Loop where you get dividends by stock name using investpy funcs
     try:
 
@@ -37,12 +34,9 @@ for stock in data:  # Loop where you get dividends by stock name using investpy 
             stock_info.to_excel(writer, "Sheet", startrow=i, header=False, index=False)
             writer.save()
             i = i + 9
-<<<<<<< HEAD
         progress = progress + 1
         print(progress, '/505', ' - ', stock, ' - DATA FOUND')
-=======
 
->>>>>>> master
     except:  # If there is no data provided - write 'NO DATA' to every info cell
         failuremessage = {'Name': [stock],
                           'Data1': ['NO DATA'],
@@ -55,14 +49,8 @@ for stock in data:  # Loop where you get dividends by stock name using investpy 
         df = pd.DataFrame(failuremessage)
         df.to_excel(writer, "Sheet", startrow=i, header=False, index=False)
         writer.save()
-<<<<<<< HEAD
-
         i = i + 2
         progress = progress + 1
         print(progress, '/505', ' - ', stock, ' - DATA NOT FOUND')
         continue
-=======
         
-        i = i + 2
-        continue
->>>>>>> master
