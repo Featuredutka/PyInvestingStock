@@ -5,7 +5,14 @@ from openpyxl import load_workbook, Workbook
 
 book = xlrd.open_workbook('/Users/ash/Desktop/SP500.xls')  # Getting local stocks names for loop
 sheet = book.sheet_by_name('SP500')
-data = [sheet.cell_value(r, 2) for r in range(1, 506)]
+reiter = 0
+
+for col in range(sheet.nrows):  # Loop to get number of none-empty cells
+    names = sheet.cell(col, 0)
+    if names.value != xlrd.empty_cell.value:
+        reiter = reiter+1
+
+data = [sheet.cell_value(r, 2) for r in range(1, reiter)]
 
 wb = Workbook()  # Creating workbook for results
 ws = wb.active
@@ -18,7 +25,6 @@ writer.sheets = dict((ws.title, ws) for ws in book.worksheets)
 
 i = 0  # Loop iterator
 progress = 0
-
 for stock in data:  # Loop where you get dividends by stock name using investpy funcs
     try:
 
@@ -36,7 +42,6 @@ for stock in data:  # Loop where you get dividends by stock name using investpy 
             i = i + 9
         progress = progress + 1
         print(progress, '/505', ' - ', stock, ' - DATA FOUND')
-
     except:  # If there is no data provided - write 'NO DATA' to every info cell
         failuremessage = {'Name': [stock],
                           'Data1': ['NO DATA'],
@@ -49,8 +54,8 @@ for stock in data:  # Loop where you get dividends by stock name using investpy 
         df = pd.DataFrame(failuremessage)
         df.to_excel(writer, "Sheet", startrow=i, header=False, index=False)
         writer.save()
+
         i = i + 2
         progress = progress + 1
         print(progress, '/505', ' - ', stock, ' - DATA NOT FOUND')
         continue
-        
