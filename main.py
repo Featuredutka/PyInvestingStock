@@ -16,6 +16,7 @@ for col in range(sheet.nrows):  # Loop to get number of none-empty cells
         reiter = reiter + 1
 
 data = [sheet.cell_value(r, 2) for r in range(1, reiter)]
+country_data = [sheet.cell_value(r, 3) for r in range(1, reiter)]  # Country list for multinational stock lists
 
 wb = Workbook()  # Creating workbook for results
 ws = wb.active
@@ -26,11 +27,13 @@ writer = pd.ExcelWriter(path_to_output, engine='openpyxl')
 writer.book = book
 writer.sheets = dict((ws.title, ws) for ws in book.worksheets)
 
-i = 0  # Loop iterator
+i = 0  # Loop iterators
 progress = 0
+countryiterator = 0
+
 for stock in data:  # Loop getting dividends by stock name using investpy funcs
     try:
-        stock_info = investpy.stocks.get_stock_dividends(stock, country='united states')
+        stock_info = investpy.stocks.get_stock_dividends(stock, country=country_data[countryiterator])
         stock_info.insert(0, "Name", stock, True)
         stock_info = stock_info.iloc[:8]
 
@@ -60,4 +63,6 @@ for stock in data:  # Loop getting dividends by stock name using investpy funcs
         i = i + 2
         progress = progress + 1
         print(progress, '/505', ' - ', stock, ' - DATA NOT FOUND')
+    finally:
+        countryiterator = countryiterator + 1
         continue
