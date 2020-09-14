@@ -1,4 +1,8 @@
 # PyInvestingStock
-Getting stocks data from Investing.com by local stock name from .xls and writing dividents information to new .xlsx
-Notice, that programm was at first built for SP500 list - no other countries among US are currently supported
+Script allows to get stocks data from Investing.com by local stock name from .xls and writing dividents information to new .xlsx.
+
+Current version (v.0.1.9):
+> ADDED: multifuncticountry stock lists search
+> Fixed: exceptions handler 
+
 WORK IN PROGRESS
