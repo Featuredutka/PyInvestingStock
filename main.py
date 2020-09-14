@@ -44,7 +44,7 @@ for stock in data:  # Loop getting dividends by stock name using investpy funcs
             i = i + 9
         progress = progress + 1
         print(progress, '/505', ' - ', stock, ' - DATA FOUND')
-    finally:  # If there is no data provided - write 'NO DATA' to every info cell
+    except:  # If there is no data provided - write 'NO DATA' to every info cell
         failuremessage = {'Name': [stock],
                           'Data1': ['NO DATA'],
                           'Data2': ['NO DATA'],
