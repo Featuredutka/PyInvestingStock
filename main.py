@@ -3,8 +3,26 @@ import xlrd
 import pandas as pd
 from openpyxl import load_workbook, Workbook
 
-path_to_file = '/Users/ash/Desktop/SP500.xls'
-path_to_output = '/Users/ash/Desktop/test.xlsx'
+
+def CheckOutputFile():  # Checking if there's a local source and output files -
+    # if there are no - it will ask you once to declare paths to create them
+    try:
+        outputtxt = open('data.txt', 'r')
+        pathsfromfile = [outputtxt.readline()[:-1], outputtxt.readline()]
+        return pathsfromfile
+    except:
+        outputtxt = open('data.txt', 'w')
+        print('Enter path to source file:')
+        outputtxt.write(input() + '\n')
+        print('Enter path to output file:')
+        outputtxt.write(input())
+        outputtxt.close()
+        exit(0)
+
+
+paths = CheckOutputFile()  # Getting paths to necessary files
+path_to_file = paths[0]
+path_to_output = paths[1]
 
 book = xlrd.open_workbook(path_to_file)  # Getting local stocks names for loop
 sheet = book.sheet_by_name('SP500')
