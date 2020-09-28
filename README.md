@@ -4,7 +4,7 @@ Script allows to get stocks data from Investing.com by local stock name from .xl
 <b1>Current version (v.0.1.11):</b1>
 
  <i><b>ADDED:</b></i> Windows OS defaulf path support.
-                      Paths now are recognised if they use either '\' or '/'.
+                      Paths now are recognised if they use either '\\' or '/'.
  
  <i><b>FIXED:</b></i> Local path variables dependency.
 
