@@ -20,6 +20,11 @@ def CheckOutputFile():  # Checking if there's a local source and output files -
         exit(0)
 
 
+def MergeFunction(firstdataframe, seconddataframe):
+    mergelist = [firstdataframe, seconddataframe]
+    return pd.concat(mergelist)
+
+
 paths = CheckOutputFile()  # Getting paths to necessary files
 path_to_file = paths[0]
 path_to_output = paths[1]
@@ -33,8 +38,10 @@ for col in range(sheet.nrows):  # Loop to get number of none-empty cells
     if names.value != xlrd.empty_cell.value:
         reiter = reiter + 1
 
-data = [sheet.cell_value(r, 2) for r in range(1, reiter)]
+data = [sheet.cell_value(r, 2) for r in range(1, reiter)]  # Stock list
 country_data = [sheet.cell_value(r, 3) for r in range(1, reiter)]  # Country list for multinational stock lists
+result_dataframe = (investpy.stocks.get_stock_dividends('AAPL', country='united states')).iloc[:3]  # Shitty, but
+# working part - necessary non-empty list for merging to work
 
 wb = Workbook()  # Creating workbook for results
 ws = wb.active
@@ -55,30 +62,20 @@ for stock in data:  # Loop getting dividends by stock name using investpy funcs
         stock_info.insert(0, "Name", stock, True)
         stock_info = stock_info.iloc[:8]
 
-        if i == 0:
-            stock_info.to_excel(writer, "Sheet", startrow=i, header=True, index=False)
-            writer.save()
-            i = i + 10
-        else:
-            stock_info.to_excel(writer, "Sheet", startrow=i, header=False, index=False)
-            writer.save()
-            i = i + 9
+        result_dataframe = MergeFunction(result_dataframe, stock_info)
+
+        if data.index(stock) == 0:
+            result_dataframe = result_dataframe.iloc[3:]
+
         progress = progress + 1
         print(progress, '/505', ' - ', stock, ' - DATA FOUND')
     except:  # If there is no data provided - write 'NO DATA' to every info cell
-        failuremessage = {'Name': [stock],
-                          'Data1': ['NO DATA'],
-                          'Data2': ['NO DATA'],
-                          'Data3': ['NO DATA'],
-                          'Data4': ['NO DATA'],
-                          'Data5': ['NO DATA']
-                          }
+        data = {'Name': ['Nah'], 'Age': [20, 21, 19, 18]}
 
-        df = pd.DataFrame(failuremessage)
-        df.to_excel(writer, "Sheet", startrow=i, header=False, index=False)
-        writer.save()
+        data = pd.DataFrame(data)
+        result_dataframe.append(pd.Series(name='NameOfNewRow'))
+        print(result_dataframe)
 
-        i = i + 2
         progress = progress + 1
         print(progress, '/505', ' - ', stock, ' - DATA NOT FOUND')
     finally:
