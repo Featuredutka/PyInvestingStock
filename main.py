@@ -13,9 +13,9 @@ def CheckOutputFile():  # Checking if there's a local source and output files -
     except:
         outputtxt = open('data.txt', 'w')
         print('Enter path to source file:')
-        outputtxt.write(input() + '\n')
+        outputtxt.write(input().replace('\\', '/') + '\n')
         print('Enter path to output file:')
-        outputtxt.write(input())
+        outputtxt.write(input().replace('\\', '/'))
         outputtxt.close()
         exit(0)
 
