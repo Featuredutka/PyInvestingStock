@@ -8,4 +8,6 @@ Script allows to get stocks data from Investing.com by local stock name from .xl
  
  <i><b>FIXED:</b></i> Local path variables dependency.
 
+STABLE BUILD
+
 WORK IN PROGRESS
