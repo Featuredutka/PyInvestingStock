@@ -2,6 +2,7 @@ import investpy
 import xlrd
 import pandas as pd
 from openpyxl import load_workbook, Workbook
+from progress.bar import IncrementalBar
 
 
 def CheckOutputFile():  # Checking if there's a local source and output files -
@@ -48,8 +49,9 @@ writer.sheets = dict((ws.title, ws) for ws in book.worksheets)
 i = 0  # Loop iterators
 progress = 0
 countryiterator = 0
+bar = IncrementalBar('Processing', max=len(data[:20]))  # Initializing the progress bar
 
-for stock in data:  # Loop getting dividends by stock name using investpy funcs
+for stock in data[:20]:  # Loop getting dividends by stock name using investpy funcs
     try:
         stock_info = investpy.stocks.get_stock_dividends(stock, country=country_data[countryiterator])
         stock_info.insert(0, "Name", stock, True)
@@ -64,7 +66,8 @@ for stock in data:  # Loop getting dividends by stock name using investpy funcs
             writer.save()
             i = i + 9
         progress = progress + 1
-        print(progress, '/505', ' - ', stock, ' - DATA FOUND')
+        bar.next()
+        print(' - ', stock, ' - DATA FOUND')
     except RuntimeError:  # If there is no data provided - write 'NO DATA' to every info cell
         failuremessage = {'Name': [stock],
                           'Data1': ['NO DATA'],
@@ -79,6 +82,12 @@ for stock in data:  # Loop getting dividends by stock name using investpy funcs
 
         i = i + 2
         progress = progress + 1
-        print(progress, '/505', ' - ', stock, ' - DATA NOT FOUND')
+        bar.next()
+        print(' - ', stock, ' - DATA NOT FOUND')
+    except KeyboardInterrupt:  # Beautiful wrapping of keyboard interruption traceback
+        print("\n### Interrupted by User ###")
+        exit(0)
     finally:
         countryiterator = countryiterator + 1
+
+bar.finish()
