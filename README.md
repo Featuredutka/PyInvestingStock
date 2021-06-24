@@ -1,10 +1,9 @@
 # PyInvestingStock
-Script allows to get stocks data from Investing.com by local stock name from .xls and writing dividents information to new .xlsx.
+Script allows to get dividents data from Investing.com by a stock name.
 
-<b1>Current version (v.0.1.12):</b1>
- 
- <i><b>FIXED:</b></i> Investpy missing stock data error tracking.
+For correct use install requirements:
+```bash 
+$ pip install -r requirements.txt
+``` 
 
-STABLE BUILD
-
-WORK IN PROGRESS
+v.0.1.12S
