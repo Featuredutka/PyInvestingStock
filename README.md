@@ -1,12 +1,9 @@
 # PyInvestingStock
 Script allows to get stocks data from Investing.com by local stock name from .xls and writing dividents information to new .xlsx.
 
-<b1>Current version (v.0.1.11):</b1>
-
- <i><b>ADDED:</b></i> Windows OS defaulf path support.
-                      Paths now are recognised if they contain either '\\' or '/'.
+<b1>Current version (v.0.1.12):</b1>
  
- <i><b>FIXED:</b></i> Local path variables dependency.
+ <i><b>FIXED:</b></i> Investpy missing stock data error tracking.
 
 STABLE BUILD
 
