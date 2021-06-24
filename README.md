@@ -1,5 +1,5 @@
 # PyInvestingStock
-Script allows to get dividents data from Investing.com by a stock name.
+Script allows to get dividends data from Investing.com by a stock name.
 
 For correct use install requirements:
 ```bash 
