@@ -65,7 +65,7 @@ for stock in data:  # Loop getting dividends by stock name using investpy funcs
             i = i + 9
         progress = progress + 1
         print(progress, '/505', ' - ', stock, ' - DATA FOUND')
-    except:  # If there is no data provided - write 'NO DATA' to every info cell
+    except RuntimeError:  # If there is no data provided - write 'NO DATA' to every info cell
         failuremessage = {'Name': [stock],
                           'Data1': ['NO DATA'],
                           'Data2': ['NO DATA'],
@@ -73,7 +73,6 @@ for stock in data:  # Loop getting dividends by stock name using investpy funcs
                           'Data4': ['NO DATA'],
                           'Data5': ['NO DATA']
                           }
-
         df = pd.DataFrame(failuremessage)
         df.to_excel(writer, "Sheet", startrow=i, header=False, index=False)
         writer.save()
