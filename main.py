@@ -18,7 +18,7 @@ def CheckOutputFile():  # Checking if there's a local source and output files -
         print('Enter path to output file:')
         outputtxt.write(input().replace('\\', '/'))
         outputtxt.close()
-        exit(0)
+        return CheckOutputFile()
 
 
 paths = CheckOutputFile()  # Getting paths to necessary files
@@ -49,9 +49,9 @@ writer.sheets = dict((ws.title, ws) for ws in book.worksheets)
 i = 0  # Loop iterators
 progress = 0
 countryiterator = 0
-bar = IncrementalBar('Processing', max=len(data[:20]))  # Initializing the progress bar
+bar = IncrementalBar('Processing', max=len(data))  # Initializing the progress bar
 
-for stock in data[:20]:  # Loop getting dividends by stock name using investpy funcs
+for stock in data:  # Loop getting dividends by stock name using investpy funcs
     try:
         stock_info = investpy.stocks.get_stock_dividends(stock, country=country_data[countryiterator])
         stock_info.insert(0, "Name", stock, True)
