@@ -7,16 +7,15 @@ from progress.bar import IncrementalBar
 
 def CheckOutputFile():  # Checking if there's a local source and output files
     try:
-        outputtxt = open('data.txt', 'r')
-        pathsfromfile = [outputtxt.readline()[:-1], outputtxt.readline()]
+        with open('data.txt', 'r') as outputtxt:
+            pathsfromfile = [outputtxt.readline()[:-1], outputtxt.readline()]
         return pathsfromfile
     except:
-        outputtxt = open('data.txt', 'w')
-        print('Enter path to source file:')
-        outputtxt.write(input().replace('\\', '/') + '\n')
-        print('Enter path to output file:')
-        outputtxt.write(input().replace('\\', '/'))
-        outputtxt.close()
+        with open('data.txt', 'w') as outputtxt:
+            print('Enter path to source file:')
+            outputtxt.write(input().replace('\\', '/') + '\n')
+            print('Enter path to output file:')
+            outputtxt.write(input().replace('\\', '/'))
         return CheckOutputFile()
 
 def NoDataFoundMessage(stock):
@@ -34,17 +33,18 @@ paths = CheckOutputFile()  # Getting paths to necessary files
 path_to_file = paths[0]
 path_to_output = paths[1]
 
-book = xlrd.open_workbook(path_to_file)  # Getting local stocks names for loop
-sheet = book.sheet_by_name('SP500')
-reiter = 0
+with xlrd.open_workbook(path_to_file) as book:  # Getting local stocks names for loop
+    sheet = book.sheet_by_name('SP500')
+    
+cell_iterator = 0
 
 for col in range(sheet.nrows):  # Loop to get number of none-empty cells
     names = sheet.cell(col, 0)
     if names.value != xlrd.empty_cell.value:
-        reiter = reiter + 1
+        cell_iterator = cell_iterator + 1
 
-data = [sheet.cell_value(r, 2) for r in range(1, reiter)]  # An array of stock short names
-country_data = [sheet.cell_value(r, 3) for r in range(1, reiter)]  # Country list for multinational stock lists
+data = [sheet.cell_value(r, 2) for r in range(1, cell_iterator)]  # An array of stock short names
+country_data = [sheet.cell_value(r, 3) for r in range(1, cell_iterator)]  # Country list for multinational stock lists
 
 wb = Workbook()  # Creating workbook for results
 ws = wb.active
