@@ -6,4 +6,4 @@ For correct use install requirements:
 $ pip install -r requirements.txt
 ``` 
 
-v.0.1.12S
+v.0.1.53S
