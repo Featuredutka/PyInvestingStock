@@ -4,6 +4,8 @@ import pandas as pd
 from openpyxl import load_workbook, Workbook
 from progress.bar import IncrementalBar
 
+SHORT_NAMES_ROW_NUM = 2  # Vital table column positions
+COUNTRIES_ROW_NUM = 3
 
 def check_output_file():  # Checking if there's a local source and output files
     try:
@@ -19,13 +21,7 @@ def check_output_file():  # Checking if there's a local source and output files
         return check_output_file()
 
 def no_data_found_message(stock):
-    return {'Name': [stock],
-                          'Data1': ['NO DATA'],
-                          'Data2': ['NO DATA'],
-                          'Data3': ['NO DATA'],
-                          'Data4': ['NO DATA'],
-                          'Data5': ['NO DATA']
-                          }
+    return [[stock]+['NO DATA']*5]
 
 def main():
     paths = check_output_file()  # Getting paths to necessary files
@@ -35,18 +31,12 @@ def main():
     with xlrd.open_workbook(path_to_file) as book:  # Getting local stocks names for loop
         sheet = book.sheet_by_name('SP500')
     
-    cell_iterator = 0
+    cell_iterator = sheet.nrows  # Number of none-empty cells
 
-    for col in range(sheet.nrows):  # Loop to get number of none-empty cells
-        names = sheet.cell(col, 0)
-        if names.value != xlrd.empty_cell.value:
-            cell_iterator += 1
-
-    data = [sheet.cell_value(r, 2) for r in range(1, cell_iterator)]  # An array of stock short names
-    country_data = [sheet.cell_value(r, 3) for r in range(1, cell_iterator)]  # Country list for multinational stock lists
+    data = [sheet.cell_value(r, SHORT_NAMES_ROW_NUM) for r in range(1, cell_iterator)]  # An array of stock short names
+    country_data = [sheet.cell_value(r, COUNTRIES_ROW_NUM) for r in range(1, cell_iterator)]  # Country list for multinational stock lists
 
     wb = Workbook()  # Creating workbook for results
-    ws = wb.active
     wb.save(path_to_output)
 
     book = load_workbook(path_to_output)  # Working with output file without overwriting it within loop
@@ -80,7 +70,7 @@ def main():
             i += 2
             bar.next()
             print(' - ', stock, ' - DATA NOT FOUND')
-        except KeyboardInterrupt:  # Beautiful wrapping of keyboard interruption traceback
+        except KeyboardInterrupt:  # Wrapped keyboard interruption traceback
             print("\n#-#-# Interrupted by User #-#-#")
             exit(0)
         finally:
