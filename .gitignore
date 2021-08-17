@@ -1,2 +1,5 @@
 .DS_Store
-~$*.xls*
+SP500.xls
+test.xlsx
+~$*.xl*
+*.sh
