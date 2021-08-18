@@ -38,11 +38,9 @@ def main():
 
     wb = Workbook()  # Creating workbook for results
     wb.save(path_to_output)
-
+    
     book = load_workbook(path_to_output)  # Working with output file without overwriting it within loop
     writer = pd.ExcelWriter(path_to_output, engine='openpyxl')
-    writer.book = book
-    writer.sheets = {ws.title: ws for ws in book.worksheets}
 
     i = 0  # Loop iterators
     countryiterator = 0
@@ -52,7 +50,7 @@ def main():
         try:
             stock_info = investpy.stocks.get_stock_dividends(stock, country=country_data[countryiterator])
             stock_info.insert(0, "Name", stock, True)
-            stock_info = stock_info.iloc[:8]
+            stock_info = stock_info.iloc[:8]  # Slicing data for a period we need
             if i != 0:
                 stock_info.to_excel(writer, "Sheet", startrow=i, header=False, index=False)
                 writer.save()
