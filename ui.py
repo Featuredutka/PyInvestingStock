@@ -1,7 +1,4 @@
 import sys
-import supervisor
-
-from matplotlib.pyplot import pause
 import main
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit
@@ -51,7 +48,7 @@ class Basic_view(QMainWindow):
         self.start_button.resize(380,32)
         self.start_button.move(60, 108)
 
-    def get_input(self, input):  #TODO Write source file updating
+    def get_input(self, input):
         print(input)
     
     def on_start(self):
@@ -64,7 +61,6 @@ class Basic_view(QMainWindow):
             self.progressview = Progress_view()
             self.progressview.show()
             self.progressview.main_loop()
-
         
 class Progress_view(QMainWindow):
     def __init__(self):
@@ -75,12 +71,12 @@ class Progress_view(QMainWindow):
         self.max_value = 10
         
         self.info_label = QLabel(self)
-        self.info_label.setText('Fetching data: ') # TODO Fix progress bar values
+        self.info_label.setText('Fetching data: ') 
         self.info_label.resize(200, 32)
         self.info_label.move(20, 20)
         
         self.progress = QProgressBar(self)
-        self.progress.setMaximum(self.max_value)  # TODO Fix progress bar values
+        self.progress.setMaximum(self.max_value)
         self.progress.setValue(self.progress_value)
         self.progress.resize(460,32)
         self.progress.move(20, 60)
@@ -97,28 +93,8 @@ class Progress_view(QMainWindow):
         self.thread.started.connect(self.worker.run)
         self.thread.start()
 
-
-        
-        #main.main(self)  #TODO Transfer progress bar entity to update it
-
     def on_stop(self):
         self.close()
-
-class Error_view(QMainWindow):
-    def __init__(self):
-        QMainWindow.__init__(self)
-        self.setMinimumSize(QSize(300, 120))    
-        self.setWindowTitle("Error")
-
-        self.err_label = QLabel(self)
-        self.err_label.setText('Error occured: Check input/output paths') # TODO Fix error message
-        self.err_label.resize(260, 32)
-        self.err_label.move(20, 20)
-
-        self.close_button = QPushButton('Exit', self)
-        self.close_button.clicked.connect(lambda: self.close())
-        self.close_button.resize(100,32)
-        self.close_button.move(100, 80)
 
 class Worker(QObject):
     def __init__(self, progresslink):
@@ -129,6 +105,23 @@ class Worker(QObject):
 
     def run(self):
         main.main(self.progresslink)
+
+class Error_view(QMainWindow):
+    def __init__(self):
+        QMainWindow.__init__(self)
+        self.setMinimumSize(QSize(300, 120))    
+        self.setWindowTitle("Error")
+
+        self.err_label = QLabel(self)
+        self.err_label.setText('Error occured: Check input/output paths')
+        self.err_label.resize(260, 32)
+        self.err_label.move(20, 20)
+
+        self.close_button = QPushButton('Exit', self)
+        self.close_button.clicked.connect(lambda: self.close())
+        self.close_button.resize(100,32)
+        self.close_button.move(100, 80)
+
     
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

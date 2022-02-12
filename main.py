@@ -40,11 +40,11 @@ def main(supervisor):
     i = 0  # Loop iterators
     countryiterator = 0
     queue_len = len(data)
+
     bar = IncrementalBar('Processing', max=queue_len)  # Initializing the progress bar
 
     supervisor.max_value = queue_len
     supervisor.progress.setMaximum(queue_len)  # UI progressbar setting
-    print(supervisor.max_value)
 
     for stock in data:  # Loop getting dividends by stock name using investpy funcs
         try:
@@ -76,7 +76,6 @@ def main(supervisor):
             supervisor.progress.setValue(supervisor.progress_value)
             supervisor.info_label.setText('Fetching data: ' + str(supervisor.progress_value) + ' / ' + str(supervisor.max_value))
             countryiterator += 1
-            print(supervisor.max_value)
     bar.finish()
 
 
