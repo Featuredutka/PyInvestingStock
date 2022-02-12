@@ -1,2 +1,0 @@
-/Users/ash/Documents/PyInvestingStock/SP500.xls
-/Users/ash/Documents/PyInvestingStock/test.xlsx

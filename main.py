@@ -13,12 +13,12 @@ def check_output_file():  # Checking if there's a local source and output files
             pathsfromfile = [outputtxt.readline()[:-1], outputtxt.readline()]
         return pathsfromfile
     except:
-        return 1
+        return False
 
 def no_data_found_message(stock):
     return [[stock]+['NO DATA']*5]
 
-def main():
+def main(supervisor):
     paths = check_output_file()  # Getting paths to necessary files
     path_to_file = paths[0]
     path_to_output = paths[1]
@@ -39,7 +39,12 @@ def main():
 
     i = 0  # Loop iterators
     countryiterator = 0
-    bar = IncrementalBar('Processing', max=len(data))  # Initializing the progress bar
+    queue_len = len(data)
+    bar = IncrementalBar('Processing', max=queue_len)  # Initializing the progress bar
+
+    supervisor.max_value = queue_len
+    supervisor.progress.setMaximum(queue_len)  # UI progressbar setting
+    print(supervisor.max_value)
 
     for stock in data:  # Loop getting dividends by stock name using investpy funcs
         try:
@@ -67,10 +72,13 @@ def main():
             print("\n#-#-# Interrupted by User #-#-#")
             exit(0)
         finally:
+            supervisor.progress_value += 1
+            supervisor.progress.setValue(supervisor.progress_value)
+            supervisor.info_label.setText('Fetching data: ' + str(supervisor.progress_value) + ' / ' + str(supervisor.max_value))
             countryiterator += 1
-
+            print(supervisor.max_value)
     bar.finish()
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

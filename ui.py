@@ -1,12 +1,14 @@
 import sys
+import supervisor
+
+from matplotlib.pyplot import pause
 import main
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit
 from PyQt5.QtWidgets import QPushButton, QProgressBar
-from PyQt5.QtCore import QSize  
+from PyQt5.QtCore import QObject, QThread, QSize, pyqtSignal
 
 class Basic_view(QMainWindow):
-
     def __init__(self):
         QMainWindow.__init__(self)
 
@@ -53,7 +55,7 @@ class Basic_view(QMainWindow):
         print(input)
     
     def on_start(self):
-        if main.check_output_file() == -1:
+        if not main.check_output_file():
             self.close()
             self.error = Error_view()
             self.error.show()
@@ -61,18 +63,19 @@ class Basic_view(QMainWindow):
             self.close()
             self.progressview = Progress_view()
             self.progressview.show()
-            main.main()  #TODO Transfer progress bar entity to update it
+            self.progressview.main_loop()
+
         
 class Progress_view(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
         self.setMinimumSize(QSize(500, 150))    
         self.setWindowTitle("PyInvestingStock - progress")
-        self.progress_value = 5
+        self.progress_value = 0
         self.max_value = 10
         
         self.info_label = QLabel(self)
-        self.info_label.setText('Fetching data: ' + str(5) + ' / ' + str(500)) # TODO Fix progress bar values
+        self.info_label.setText('Fetching data: ') # TODO Fix progress bar values
         self.info_label.resize(200, 32)
         self.info_label.move(20, 20)
         
@@ -86,6 +89,17 @@ class Progress_view(QMainWindow):
         self.start_button.clicked.connect(lambda: self.on_stop())
         self.start_button.resize(380,32)
         self.start_button.move(60, 108)
+
+    def main_loop(self):
+        self.thread = QThread()
+        self.worker = Worker(self)
+        self.worker.moveToThread(self.thread)
+        self.thread.started.connect(self.worker.run)
+        self.thread.start()
+
+
+        
+        #main.main(self)  #TODO Transfer progress bar entity to update it
 
     def on_stop(self):
         self.close()
@@ -106,6 +120,15 @@ class Error_view(QMainWindow):
         self.close_button.resize(100,32)
         self.close_button.move(100, 80)
 
+class Worker(QObject):
+    def __init__(self, progresslink):
+        super(Worker, self).__init__()
+        self.finished = pyqtSignal()
+        self.progress = pyqtSignal(int)
+        self.progresslink = progresslink
+
+    def run(self):
+        main.main(self.progresslink)
     
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
