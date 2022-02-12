@@ -49,6 +49,7 @@ def main(supervisor):
     for stock in data:  # Loop getting dividends by stock name using investpy funcs
         try:
             stock_info = investpy.stocks.get_stock_dividends(stock, country=country_data[countryiterator])
+            
             stock_info.insert(0, "Name", stock, True)
             stock_info = stock_info.iloc[:8]  # Slicing data for a period we need
             if i != 0:
@@ -67,7 +68,14 @@ def main(supervisor):
             writer.save()
             i += 2
             bar.next()
-            print(' - ', stock, ' - DATA NOT FOUND')
+            print(' - ', stock, ' - DATA NOT FOUND - RuntimeError occured')
+        except ValueError:
+            df = pd.DataFrame(no_data_found_message(stock))
+            df.to_excel(writer, "Sheet", startrow=i, header=False, index=False)
+            writer.save()
+            i += 2
+            bar.next()
+            print(' - ', stock, ' - DATA NOT FOUND - ValueError occured')
         except KeyboardInterrupt:  # Wrapped keyboard interruption traceback
             print("\n#-#-# Interrupted by User #-#-#")
             exit(0)

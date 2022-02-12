@@ -103,7 +103,7 @@ class Worker(QObject):
         self.progress = pyqtSignal(int)
         self.progresslink = progresslink
 
-    def run(self):
+    def run(self): 
         main.main(self.progresslink)
 
 class Error_view(QMainWindow):
