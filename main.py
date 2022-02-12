@@ -13,12 +13,7 @@ def check_output_file():  # Checking if there's a local source and output files
             pathsfromfile = [outputtxt.readline()[:-1], outputtxt.readline()]
         return pathsfromfile
     except:
-        with open('data.txt', 'w') as outputtxt:
-            print('Enter path to source file:')
-            outputtxt.write(input().replace('\\', '/') + '\n')
-            print('Enter path to output file:')
-            outputtxt.write(input().replace('\\', '/'))
-        return check_output_file()
+        return 1
 
 def no_data_found_message(stock):
     return [[stock]+['NO DATA']*5]

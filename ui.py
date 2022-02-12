@@ -49,16 +49,20 @@ class Basic_view(QMainWindow):
         self.start_button.resize(380,32)
         self.start_button.move(60, 108)
 
-    def get_input(self, input):
+    def get_input(self, input):  #TODO Write source file updating
         print(input)
     
     def on_start(self):
-        self.close()
-        self.progressview = Progress_view()
-        self.progressview.show()
-        # main.main()
+        if main.check_output_file() == -1:
+            self.close()
+            self.error = Error_view()
+            self.error.show()
+        else:
+            self.close()
+            self.progressview = Progress_view()
+            self.progressview.show()
+            main.main()  #TODO Transfer progress bar entity to update it
         
-
 class Progress_view(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
@@ -85,6 +89,22 @@ class Progress_view(QMainWindow):
 
     def on_stop(self):
         self.close()
+
+class Error_view(QMainWindow):
+    def __init__(self):
+        QMainWindow.__init__(self)
+        self.setMinimumSize(QSize(300, 120))    
+        self.setWindowTitle("Error")
+
+        self.err_label = QLabel(self)
+        self.err_label.setText('Error occured: Check input/output paths') # TODO Fix error message
+        self.err_label.resize(260, 32)
+        self.err_label.move(20, 20)
+
+        self.close_button = QPushButton('Exit', self)
+        self.close_button.clicked.connect(lambda: self.close())
+        self.close_button.resize(100,32)
+        self.close_button.move(100, 80)
 
     
 if __name__ == "__main__":
