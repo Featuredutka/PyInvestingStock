@@ -85,7 +85,7 @@ def main(supervisor):
             supervisor.info_label.setText('Fetching data: ' + str(supervisor.progress_value) + ' / ' + str(supervisor.max_value))
             countryiterator += 1
     bar.finish()
-
+    supervisor.on_stop()
 
 # if __name__ == "__main__":
 #     main()

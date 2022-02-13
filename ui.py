@@ -34,12 +34,12 @@ class Basic_view(QMainWindow):
 
         # Two buttons for updating lines and one to start the script
         self.in_button = QPushButton('Update', self)
-        self.in_button.clicked.connect(lambda: self.get_input(self.in_edit.text()))
+        self.in_button.clicked.connect(lambda: self.get_input(self.in_edit.text(), 0))
         self.in_button.resize(80,32)
         self.in_button.move(400, 22)
 
         self.out_button = QPushButton('Update', self)
-        self.out_button.clicked.connect(lambda: self.get_input(self.out_edit.text()))
+        self.out_button.clicked.connect(lambda: self.get_input(self.out_edit.text(), 1))
         self.out_button.resize(80,32)
         self.out_button.move(400, 62)   
 
@@ -48,8 +48,20 @@ class Basic_view(QMainWindow):
         self.start_button.resize(380,32)
         self.start_button.move(60, 108)
 
-    def get_input(self, input):
-        print(input)
+    def get_input(self, input, line):
+        with open('data.txt', 'r') as outputtxt:
+            self.pathsfromfile = [outputtxt.readline()[:-1], outputtxt.readline()]
+            outputtxt.close()
+        with open('data.txt', 'w') as outputtxt:
+            if line:  # Line 2
+                self.pathsfromfile[1] = input
+            else:  # Line 1
+                self.pathsfromfile[0] = input
+            for i in range(0, 2):
+                outputtxt.write(self.pathsfromfile[i].replace('\\', '/'))
+                if not i:
+                    outputtxt.write('\n')
+            outputtxt.close()
     
     def on_start(self):
         if not main.check_output_file():
@@ -86,14 +98,16 @@ class Progress_view(QMainWindow):
         self.start_button.resize(380,32)
         self.start_button.move(60, 108)
 
-    def main_loop(self):
         self.thread = QThread()
         self.worker = Worker(self)
+
+    def main_loop(self):
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.thread.start()
 
     def on_stop(self):
+        self.thread.exit()
         self.close()
 
 class Worker(QObject):
