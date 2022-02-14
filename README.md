@@ -7,15 +7,19 @@ Script allows to get dividends data from Investing.com by a stock name.
 - [x] Fix ValueError block
 - [ ] Fix ConnectionError block
 - [x] Add error handling UI
-- [ ] Add comments to code
-- [ ] Add "Process finished" UI window (?)
+- [x] Add comments to code
+- [x] Add "Process finished" UI window (?)
 - [ ] Add current paths lookup button
 - [x] Link line editing and buttons with paths file
-- [ ] Update README with recommended input file format and stuff
+- [ ] Update README with recommended input file format
 
-For correct use install requirements:
+## Installation
+
+After downloading files install requirements by executing:
 ```bash 
 pip install -r requirements.txt
 ``` 
+## Input files format
+
 ### 
-v.0.2.6A
+v.0.2.85A
