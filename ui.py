@@ -12,7 +12,7 @@ class Basic_view(QMainWindow):
         self.setMinimumSize(QSize(500, 150))    
         self.setWindowTitle("PyInvestingStock") 
 
-        # Two labels 
+        # Two labels for input/output guidance
         self.in_label = QLabel(self)
         self.in_label.setText('Input file location:')
         self.in_label.resize(200, 32)
@@ -23,7 +23,7 @@ class Basic_view(QMainWindow):
         self.out_label.resize(200, 32)
         self.out_label.move(20, 60)
 
-        # Two input fields
+        # Two input fields for input/output paths
         self.in_edit = QLineEdit(self)
         self.in_edit.resize(220, 22)
         self.in_edit.move(160, 26)
@@ -48,25 +48,25 @@ class Basic_view(QMainWindow):
         self.start_button.resize(380,32)
         self.start_button.move(60, 108)
 
-    def get_input(self, input, line):
+    def get_input(self, input, line):  # Validating if there are two lines in the paths file 
         with open('data.txt', 'r') as outputtxt:
-            self.pathsfromfile = [outputtxt.readline()[:-1], outputtxt.readline()]
+            self.pathsfromfile = [outputtxt.readline()[:-1], outputtxt.readline()]  # Getting paths as a list
             outputtxt.close()
         with open('data.txt', 'w') as outputtxt:
-            if line:  # Line 2
-                self.pathsfromfile[1] = input
-            else:  # Line 1
-                self.pathsfromfile[0] = input
-            for i in range(0, 2):
-                outputtxt.write(self.pathsfromfile[i].replace('\\', '/'))
+            if line:
+                self.pathsfromfile[1] = input  # Modifying output path
+            else:
+                self.pathsfromfile[0] = input  # Modifying input path
+            for i in range(2):
+                outputtxt.write(self.pathsfromfile[i].replace('\\', '/'))  # Owerwriting paths to the file
                 if not i:
-                    outputtxt.write('\n')
+                    outputtxt.write('\n')  # Step to a new line after writing the first one
             outputtxt.close()
     
     def on_start(self):
-        if not main.check_output_file():
+        if not main.check_output_file():  
             self.close()
-            self.error = Error_view()
+            self.error = Message_view("Error processing paths")
             self.error.show()
         else:
             self.close()
@@ -98,7 +98,7 @@ class Progress_view(QMainWindow):
         self.start_button.resize(380,32)
         self.start_button.move(60, 108)
 
-        self.thread = QThread()
+        self.thread = QThread()  # Threadding is needed to update the progressbar view while parsing data in main func
         self.worker = Worker(self)
 
     def main_loop(self):
@@ -106,28 +106,31 @@ class Progress_view(QMainWindow):
         self.thread.started.connect(self.worker.run)
         self.thread.start()
 
-    def on_stop(self):
+    def on_stop(self):  # Closing thread when done
         self.thread.exit()
         self.close()
 
-class Worker(QObject):
+        self.exitwin = Message_view("Process completed")
+        self.exitwin.show()
+
+class Worker(QObject):  # Thread worker class that runs the main parsing loop
     def __init__(self, progresslink):
         super(Worker, self).__init__()
         self.finished = pyqtSignal()
         self.progress = pyqtSignal(int)
         self.progresslink = progresslink
 
-    def run(self): 
+    def run(self):  # Transferring class to the main loop to be able to modify its fields
         main.main(self.progresslink)
 
-class Error_view(QMainWindow):
-    def __init__(self):
+class Message_view(QMainWindow):
+    def __init__(self, message):
         QMainWindow.__init__(self)
         self.setMinimumSize(QSize(300, 120))    
-        self.setWindowTitle("Error")
+        # self.setWindowTitle(" ")
 
         self.err_label = QLabel(self)
-        self.err_label.setText('Error occured: Check input/output paths')
+        self.err_label.setText(message)
         self.err_label.resize(260, 32)
         self.err_label.move(20, 20)
 
