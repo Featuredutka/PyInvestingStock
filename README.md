@@ -11,6 +11,7 @@ Script allows to get dividends data from Investing.com by a stock name.
 - [ ] Add "Process finished" UI window (?)
 - [ ] Add current paths lookup button
 - [x] Link line editing and buttons with paths file
+- [ ] Update README with recommended input file format and stuff
 
 For correct use install requirements:
 ```bash 
