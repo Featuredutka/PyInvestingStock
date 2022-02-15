@@ -63,7 +63,7 @@ class Basic_view(QMainWindow):
                     outputtxt.write('\n')  # Step to a new line after writing the first one
             outputtxt.close()
     
-    def on_start(self):
+    def on_start(self):  # TODO Add internet connection check with Connection ERR message
         if not main.check_output_file():  
             self.close()
             self.error = Message_view("Error processing paths")

@@ -6,6 +6,7 @@ from progress.bar import IncrementalBar
 
 SHORT_NAMES_ROW_NUM = 2  # Vital table column positions
 COUNTRIES_ROW_NUM = 3
+SHEET_NAME = 'SP500'
 
 def check_output_file():  # Checking if there's a local source and output files
     try:
@@ -18,13 +19,13 @@ def check_output_file():  # Checking if there's a local source and output files
 def no_data_found_message(stock):
     return [[stock]+['NO DATA']*5]
 
-def main(supervisor):
+def main(supervisor):  # Supervisor is a progressbar UI view
     paths = check_output_file()  # Getting paths to necessary files
     path_to_file = paths[0]
     path_to_output = paths[1]
 
     with xlrd.open_workbook(path_to_file) as book:  # Getting local stocks names for loop
-        sheet = book.sheet_by_name('SP500')
+        sheet = book.sheet_by_name(SHEET_NAME)
     
     cell_iterator = sheet.nrows  # Number of none-empty cells
 
@@ -86,6 +87,3 @@ def main(supervisor):
             countryiterator += 1
     bar.finish()
     supervisor.on_stop()
-
-# if __name__ == "__main__":
-#     main()
